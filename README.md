@@ -3,6 +3,8 @@ Provides easy access to market data from Moscow exchage using https://www.moex.c
 
 # Usage
 ```
+source('getIISMOEXDATA.R')
+
 # ETF
 getMOEXData(ticker = 'FXCN',from='2020-09-01',to='2020-09-10', interval = 24)
 
@@ -28,7 +30,7 @@ getMOEXData(ticker = 'RU000A101FG8',from='2020-09-01',to='2020-09-10', interval 
 
 # Requirements
 ```
-install.packages(c("data.table", "jsonlite"))
+install.packages(c('data.table','jsonlite'))
 ```
 
 
