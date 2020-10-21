@@ -1,0 +1,105 @@
+#' ISS MOEX DATA Downloader
+#' @description market data downloader from MOEX ISS engine
+#' @param ticker   ticker name
+#' @param from     start date
+#' @param to       end date
+#' @param interval 24 (1day), 60 (1hour), 10 (10min), 1 (1min)
+#' @usage getMOEXData(ticker = 'SBER',from='2006-01-01',to='2020-09-10', interval = 24)
+
+library(data.table)
+library(jsonlite)
+
+getMOEXData<-function(ticker, from, to, interval=1){
+  
+  check_ticker_url <- paste0('https://iss.moex.com/iss/securities.json?q=',ticker)
+  res<-fromJSON(txt=check_ticker_url)
+  res<-data.table(res$securities$data)[V2==ticker]
+  
+  if(res[,.N]==0)
+    return(NULL)
+  
+  engine <- res[1,strsplit(V14,'_')][1]
+  market <- res[1,strsplit(V14,'_')][2]
+  
+  if(engine=='stock' & market!='bonds')
+    market <- 'shares'
+  
+  board  <- res[1,V15]
+  
+  pos= 0
+  baseurl   <- 'https://iss.moex.com/iss/engines/'
+  marketurl <-paste0(engine,'/markets/',market,'/boards/',board)
+  
+  url = paste0(baseurl, 
+               marketurl,
+               '/securities/',
+               ticker,
+               '/candles.csv?from=',
+               from,
+               '&till=',
+               to,
+               '&interval=',
+               interval,
+               '&start=',pos)
+  
+  dt<-data.table()
+  tdt = fread(url)
+  
+  if(tdt[,.N]==0)
+    return(NULL)
+
+  tdt[,timestamp:=as.POSIXct(begin)]
+  
+  maxPB <-as.numeric(difftime(as.POSIXct(to),
+                              as.POSIXct(from), 
+                              units = 'secs'))
+  
+  pb <- txtProgressBar(max=maxPB)
+  dt<-rbind(dt, tdt)
+  while(tdt[,.N]!=0){
+    pos = pos+tdt[,.N]
+    url = paste0(baseurl, 
+                 marketurl,
+                 '/securities/',
+                 ticker,
+                 '/candles.csv?from=',
+                 from,
+                 '&till=',
+                 to,
+                 '&interval=',interval,
+                 '&start=',pos)
+    tdt = fread(url)
+    if(tdt[,.N]){
+      tdt[,timestamp:=as.POSIXct(begin)]
+      dt<-rbind(dt, tdt)
+      setTxtProgressBar(pb,min(maxPB,
+                               maxPB-as.numeric(difftime(as.POSIXct(to),
+                                                         tdt[.N,timestamp], 
+                                                         units = 'secs'))))
+    }
+  }
+  dt[,.(timestamp,open,high,low, close,volume)]
+}
+
+# Test
+# ETF
+ getMOEXData(ticker = 'FXCN',from='2020-09-01',to='2020-09-10', interval = 1)
+
+# Futures
+# getMOEXData(ticker = 'SiZ0',from='2020-09-01',to='2020-09-10', interval = 24)
+
+# Stock
+# getMOEXData(ticker = 'SBER',from='2006-01-01',to='2020-09-10', interval = 24)
+
+# Option
+# getMOEXData(ticker = 'Si70000BL0',from='2020-09-01',to='2020-09-10', interval = 24)
+
+# Currency
+# getMOEXData(ticker = 'USD000000TOD',from='2020-09-01',to='2020-09-10', interval = 24)
+
+# Depository receipts
+# getMOEXData(ticker = 'FIVE',from='2020-09-01',to='2020-09-10', interval = 24)
+
+# Bonds
+# getMOEXData(ticker = 'RU000A101FG8',from='2020-09-01',to='2020-09-10', interval = 24)
+
