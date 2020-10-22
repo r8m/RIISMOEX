@@ -24,11 +24,14 @@
 #'
 #' @export
 
-getMOEXData<-function(ticker, from, to, interval=1){
+usethis::use_package("data.table")
+usethis::use_package("jsonlite")
+
+getMOEXData<-function(ticker='SBER', from=Sys.Date()-2, to=Sys.Date(), interval=1){
 
   check_ticker_url <- paste0('https://iss.moex.com/iss/securities.json?q=',ticker)
-  res<-fromJSON(txt=check_ticker_url)
-  res<-data.table(res$securities$data)[V2==ticker]
+  res<-jsonlite::fromJSON(txt=check_ticker_url)
+  res<-data.table::data.table(res$securities$data)[V2==ticker]
 
   if(res[,.N]==0)
     return(NULL)
@@ -57,8 +60,8 @@ getMOEXData<-function(ticker, from, to, interval=1){
                interval,
                '&start=',pos)
 
-  dt<-data.table()
-  tdt = fread(url)
+  dt<-data.table::data.table()
+  tdt<-data.table::fread(url)
 
   if(tdt[,.N]==0)
     return(NULL)
@@ -83,7 +86,7 @@ getMOEXData<-function(ticker, from, to, interval=1){
                  to,
                  '&interval=',interval,
                  '&start=',pos)
-    tdt = fread(url)
+    tdt = data.table::fread(url)
     if(tdt[,.N]){
       tdt[,timestamp:=as.POSIXct(begin)]
       dt<-rbind(dt, tdt)

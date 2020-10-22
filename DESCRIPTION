@@ -9,6 +9,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 3.5.0)
-Imports: data.table, jsonlite
-Suggests:
+Imports:
+    data.table,
+    jsonlite
 RoxygenNote: 7.1.1
