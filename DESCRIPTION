@@ -1,0 +1,14 @@
+Package: RMOEX
+Type: Package
+Title: Provides easy access to market data from Moscow Exchange
+Version: 0.1.0
+Author: Roman Lukerin
+Maintainer: Roman Lukerin <rlukerin@gmail.com>
+Description: Provides easy access to market data from Moscow Exchange
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 3.5.0)
+Imports: data.table, jsonlite
+Suggests:
+RoxygenNote: 7.1.1
