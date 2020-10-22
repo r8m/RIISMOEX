@@ -21,20 +21,12 @@
 #' getMOEXData(ticker = 'FIVE',from='2020-09-01',to='2020-09-10', interval = 24)
 #' #Bonds
 #' getMOEXData(ticker = 'RU000A101FG8',from='2020-09-01',to='2020-09-10', interval = 24)
-#usethis::use_package("data.table")
+
 #usethis::use_package("jsonlite")
 #usethis::use_package("curl")
 
-#library(data.table)
-#library(jsonlite)
-
-
 #' @export
 getMOEXData<-function(ticker='SBER', from=Sys.Date()-2, to=Sys.Date(), interval=1){
-
-  V2=.=.N=V14=V15=begin=timestamp=NULL
-  open=high=low=close=volume=NULL
-  `:=`=NULL
 
   check_ticker_url <- paste0('https://iss.moex.com/iss/securities.json?q=',ticker)
   res<-jsonlite::fromJSON(txt=check_ticker_url)
@@ -51,11 +43,11 @@ getMOEXData<-function(ticker='SBER', from=Sys.Date()-2, to=Sys.Date(), interval=
 
   board  <- res[1,V15]
 
-  pos= 0
+  pos <- 0
   baseurl   <- 'https://iss.moex.com/iss/engines/'
   marketurl <-paste0(engine,'/markets/',market,'/boards/',board)
 
-  url = paste0(baseurl,
+  url <- paste0(baseurl,
                marketurl,
                '/securities/',
                ticker,
@@ -80,8 +72,8 @@ getMOEXData<-function(ticker='SBER', from=Sys.Date()-2, to=Sys.Date(), interval=
                               units = 'secs'))
   dt<-rbind(dt, tdt)
   while(tdt[,.N]!=0){
-    pos = pos+tdt[,.N]
-    url = paste0(baseurl,
+    pos <- pos+tdt[,.N]
+    url <- paste0(baseurl,
                  marketurl,
                  '/securities/',
                  ticker,
