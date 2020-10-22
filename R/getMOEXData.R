@@ -4,29 +4,32 @@
 #' @param ticker   ticker name
 #' @param from     start date
 #' @param to       end date
-#' @param interval 24 (1day), 60 (1hour), 10 (10min), 1 (1min)
+#' @param period candle period \code{day, hour, 10min, 1min}
 #' @return data.table
 #' @examples
 #' #ETF
-#' getMOEXData(ticker = 'FXCN',from='2020-09-01',to='2020-09-10', interval = 1)
+#' getMOEXData(ticker = 'FXCN',from='2020-09-01',to='2020-09-10', period = 'day')
 #' #Futures
-#' getMOEXData(ticker = 'SiZ0',from='2020-09-01',to='2020-09-10', interval = 24)
+#' getMOEXData(ticker = 'SiZ0',from='2020-09-01',to='2020-09-10', period = 'day')
 #' #Stock
-#' getMOEXData(ticker = 'SBER',from='2006-01-01',to='2020-09-10', interval = 24)
+#' getMOEXData(ticker = 'SBER',from='2006-01-01',to='2020-09-10', period = 'day')
 #' #Option
-#' getMOEXData(ticker = 'Si70000BL0',from='2020-09-01',to='2020-09-10', interval = 24)
+#' getMOEXData(ticker = 'Si70000BL0',from='2020-09-01',to='2020-09-10', period = 'day')
 #' #Currency
-#' getMOEXData(ticker = 'USD000000TOD',from='2020-09-01',to='2020-09-10', interval = 24)
+#' getMOEXData(ticker = 'USD000000TOD',from='2020-09-01',to='2020-09-10', period = 'day')
 #' #Depository receipts
-#' getMOEXData(ticker = 'FIVE',from='2020-09-01',to='2020-09-10', interval = 24)
+#' getMOEXData(ticker = 'FIVE',from='2020-09-01',to='2020-09-10', period = 'day')
 #' #Bonds
-#' getMOEXData(ticker = 'RU000A101FG8',from='2020-09-01',to='2020-09-10', interval = 24)
+#' getMOEXData(ticker = 'RU000A101FG8',from='2020-09-01',to='2020-09-10', period = 'day')
 
 #usethis::use_package("jsonlite")
 #usethis::use_package("curl")
 
 #' @export
-getMOEXData<-function(ticker='SBER', from=Sys.Date()-2, to=Sys.Date(), interval=1){
+getMOEXData<-function(ticker='SBER', from=Sys.Date()-2, to=Sys.Date(), period='1min'){
+
+  periods = c('day'=24, 'hour'=60, '10min'=10, '1min'=1)
+  interval = periods[period]
 
   check_ticker_url <- paste0('https://iss.moex.com/iss/securities.json?q=',ticker)
   res<-jsonlite::fromJSON(txt=check_ticker_url)
