@@ -4,7 +4,7 @@ Title: Provides easy access to market data from Moscow Exchange
 Version: 0.1.0
 Author: Roman Lukerin
 Maintainer: Roman Lukerin <rlukerin@gmail.com>
-Description: Provides easy access to market data from Moscow Exchange
+Description: Provides easy access to market data from Moscow Exchange.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

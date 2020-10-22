@@ -32,11 +32,15 @@
 #' @export
 getMOEXData<-function(ticker='SBER', from=Sys.Date()-2, to=Sys.Date(), interval=1){
 
+  V2=.=.N=V14=V15=begin=timestamp=NULL
+  open=high=low=close=volume=NULL
+  `:=`=NULL
+
   check_ticker_url <- paste0('https://iss.moex.com/iss/securities.json?q=',ticker)
   res<-jsonlite::fromJSON(txt=check_ticker_url)
   res<-data.table::data.table(res$securities$data)[V2==ticker]
 
-  if(res[,.N]==0)
+  if(length(res)==0)
     return(NULL)
 
   engine <- res[1,strsplit(V14,'_')][1]
@@ -74,8 +78,6 @@ getMOEXData<-function(ticker='SBER', from=Sys.Date()-2, to=Sys.Date(), interval=
   maxPB <-as.numeric(difftime(as.POSIXct(to),
                               as.POSIXct(from),
                               units = 'secs'))
-
-  pb <- txtProgressBar(max=maxPB)
   dt<-rbind(dt, tdt)
   while(tdt[,.N]!=0){
     pos = pos+tdt[,.N]
@@ -93,10 +95,6 @@ getMOEXData<-function(ticker='SBER', from=Sys.Date()-2, to=Sys.Date(), interval=
     if(tdt[,.N]){
       tdt[,timestamp:=as.POSIXct(begin)]
       dt<-rbind(dt, tdt)
-      setTxtProgressBar(pb,min(maxPB,
-                               maxPB-as.numeric(difftime(as.POSIXct(to),
-                                                         tdt[.N,timestamp],
-                                                         units = 'secs'))))
     }
   }
   dt[,.(timestamp,open,high,low, close,volume)]
