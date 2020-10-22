@@ -21,16 +21,15 @@
 #' getMOEXData(ticker = 'FIVE',from='2020-09-01',to='2020-09-10', interval = 24)
 #' #Bonds
 #' getMOEXData(ticker = 'RU000A101FG8',from='2020-09-01',to='2020-09-10', interval = 24)
-#'
-#' @export
-
 #usethis::use_package("data.table")
 #usethis::use_package("jsonlite")
 #usethis::use_package("curl")
 
-library(data.table)
-library(jsonlite)
+#library(data.table)
+#library(jsonlite)
 
+
+#' @export
 getMOEXData<-function(ticker='SBER', from=Sys.Date()-2, to=Sys.Date(), interval=1){
 
   check_ticker_url <- paste0('https://iss.moex.com/iss/securities.json?q=',ticker)
