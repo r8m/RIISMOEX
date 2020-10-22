@@ -1,5 +1,5 @@
-# RIISMOEX
-Provides easy access to market data from Moscow exchage using https://www.moex.com/a2920
+# RMOEX
+Provides easy access to market data from Moscow exchage using  ISS engine API https://www.moex.com/a2920
 
 # Usage
 ```
