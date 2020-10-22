@@ -11,5 +11,6 @@ LazyData: true
 Depends: R (>= 3.5.0)
 Imports:
     data.table,
-    jsonlite
+    jsonlite,
+    curl
 RoxygenNote: 7.1.1

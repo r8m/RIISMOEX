@@ -24,8 +24,12 @@
 #'
 #' @export
 
-usethis::use_package("data.table")
-usethis::use_package("jsonlite")
+#usethis::use_package("data.table")
+#usethis::use_package("jsonlite")
+#usethis::use_package("curl")
+
+library(data.table)
+library(jsonlite)
 
 getMOEXData<-function(ticker='SBER', from=Sys.Date()-2, to=Sys.Date(), interval=1){
 
